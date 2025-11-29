@@ -3,6 +3,7 @@ package org.mlgnu.learnova.module.auth.service;
 import lombok.AllArgsConstructor;
 import org.mlgnu.learnova.module.auth.dto.LoginRequest;
 import org.mlgnu.learnova.module.auth.dto.SignupRequest;
+import org.mlgnu.learnova.module.auth.model.AppUserDetails;
 import org.mlgnu.learnova.module.user.model.entity.UserAccount;
 import org.mlgnu.learnova.module.user.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,8 @@ public class AuthService {
     public String login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 (new UsernamePasswordAuthenticationToken(request.username(), request.password())));
-        return jwtService.generateToken(authentication);
+        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
+
+        return jwtService.generateToken(userDetails.getUserId(), authentication);
     }
 }
