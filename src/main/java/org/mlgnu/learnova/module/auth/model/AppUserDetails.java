@@ -13,6 +13,10 @@ public class AppUserDetails implements UserDetails {
 
     private final UserAccount user;
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
     @Override
     public String getUsername() {
         return user.getUsername();
