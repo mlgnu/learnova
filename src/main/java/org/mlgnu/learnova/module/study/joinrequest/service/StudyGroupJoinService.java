@@ -39,7 +39,7 @@ public class StudyGroupJoinService {
 
         // cannot request more than once
         if (joinRequestRepository.existsStudyGroupPostJoinRequestByUserIdAndPostId(userId, post.getId())) {
-            throw new JoinRequestAlreadyExistsException(userId.toString());
+            throw new JoinRequestAlreadyExistsException(userId);
         }
 
         StudyGroupJoinRequest joinRequest = new StudyGroupJoinRequest();
@@ -54,8 +54,7 @@ public class StudyGroupJoinService {
     @Transactional
     public void cancelJoinRequest(Long userId, Long postId, Long requestId) {
 
-        StudyGroupJoinRequest joinRequest =
-                joinRequestRepository.findStudyGroupJoinRequestByIdAndPostIdOrThrow(postId, requestId);
+        StudyGroupJoinRequest joinRequest = joinRequestRepository.findByPostIdAndIdOrThrow(postId, requestId);
 
         // only request owner can cancel the request
         if (!joinRequest.getUser().getId().equals(userId)) {
@@ -73,8 +72,7 @@ public class StudyGroupJoinService {
     @Transactional
     public void approveJoinRequest(Long creatorId, Long postId, Long requestId) {
 
-        StudyGroupJoinRequest joinRequest =
-                joinRequestRepository.findStudyGroupJoinRequestByIdAndPostIdOrThrow(postId, requestId);
+        StudyGroupJoinRequest joinRequest = joinRequestRepository.findByPostIdAndIdOrThrow(postId, requestId);
 
         // only post creator can approve the request
         if (!joinRequest.getPost().getCreator().getId().equals(creatorId)) {
@@ -91,6 +89,7 @@ public class StudyGroupJoinService {
             throw new JoinRequestAlreadyApprovedException(joinRequest.getId());
         }
 
+        // rejected requests cannot be approved
         if (joinRequest.getStatus() == JoinRequestStatus.REJECTED) {
             throw new JoinRequestAlreadyRejectedException(joinRequest.getId());
         }
@@ -102,8 +101,7 @@ public class StudyGroupJoinService {
     @Transactional
     public void rejectJoinRequest(Long creatorId, Long postId, Long requestId) {
 
-        StudyGroupJoinRequest joinRequest =
-                joinRequestRepository.findStudyGroupJoinRequestByIdAndPostIdOrThrow(postId, requestId);
+        StudyGroupJoinRequest joinRequest = joinRequestRepository.findByPostIdAndIdOrThrow(postId, requestId);
 
         // only post creator can reject the request
         if (!joinRequest.getPost().getCreator().getId().equals(creatorId)) {

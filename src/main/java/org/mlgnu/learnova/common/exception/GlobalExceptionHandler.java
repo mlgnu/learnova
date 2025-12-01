@@ -1,6 +1,7 @@
 package org.mlgnu.learnova.common.exception;
 
 import org.mlgnu.learnova.module.auth.exception.UserTakenException;
+import org.mlgnu.learnova.module.study.joinrequest.exception.JoinRequestAlreadyExistsException;
 import org.mlgnu.learnova.module.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -58,6 +59,16 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+    }
+
+    @ExceptionHandler(JoinRequestAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleJoinRequestAlreadyExists(JoinRequestAlreadyExistsException ex, WebRequest request) {
+        return ErrorResponse.of(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
                 ex.getMessage(),
                 request.getDescription(false).replace("uri=", ""));
     }

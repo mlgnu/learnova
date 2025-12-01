@@ -72,9 +72,4 @@ public class StudyGroupJoinController {
         joinService.rejectJoinRequest(principal.getId(), postId, requestId);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test(@AuthenticationPrincipal JwtUserPrincipal principal) {
-        return ResponseEntity.ok().body(principal);
-    }
 }

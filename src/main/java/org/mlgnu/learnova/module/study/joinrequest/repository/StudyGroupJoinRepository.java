@@ -9,10 +9,10 @@ import java.util.Optional;
 public interface StudyGroupJoinRepository extends JpaRepository<StudyGroupJoinRequest, Long> {
     boolean existsStudyGroupPostJoinRequestByUserIdAndPostId(Long userId, Long postId);
 
-    Optional<StudyGroupJoinRequest> findStudyGroupJoinRequestByPostIdAndId(Long requestId, Long postId);
+    Optional<StudyGroupJoinRequest> findByPostIdAndId(Long postId, Long requestId);
 
-    default StudyGroupJoinRequest findStudyGroupJoinRequestByIdAndPostIdOrThrow(Long requestId, Long postId) {
-        return findStudyGroupJoinRequestByPostIdAndId(requestId, postId)
+    default StudyGroupJoinRequest findByPostIdAndIdOrThrow(Long postId, Long requestId) {
+        return findByPostIdAndId(postId, requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Join request", requestId));
     }
 }
